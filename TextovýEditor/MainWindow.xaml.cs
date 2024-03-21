@@ -50,12 +50,11 @@ namespace TextovýEditor
         {
             textvystup.Text = "";
             using (StreamReader sr = new StreamReader(path))
-            {
+            {  
                 string radek;
                 while ((radek = sr.ReadLine()) != null)
                 {
                     textvystup.Text += radek + "\n";
-                    textvystup.Text += {Binding Path=DateTimeValue, StringFormat= dd/MM/YYYY - hh:mm:ss};
                 }
             }
         }
@@ -63,17 +62,35 @@ namespace TextovýEditor
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             string vstup = textvstup.Text;
-            using (StreamWriter sw = new StreamWriter(path, true))
+            DateTime cas = DateTime.Now;
+            string Casik = cas.ToString().Replace(" "," - ").Replace(".","/");
+            try
             {
-                sw.Write($"{vstup}\n");
-            }
-            if (string.IsNullOrEmpty(textvstup.Text)) 
+                using (StreamWriter sw = new StreamWriter(path, true))
+                {
+                    if (vstup.Length == 0)
+                    {
+                        // Novy okno kdyz si kokot a text
+                        Window1 newWindow = new Window1();
+
+                        newWindow.Show();
+                    }
+                    else
+                    {
+                        sw.Write($"{vstup} | {Casik}\n");
+                    }
+
+                }
+                textvstup.Text = "";
+                precit(path);
+            } catch (Exception ex)
             {
-                Popup popup = new Popup();
-                
+                // Novy okno kdyz si kokot a nemas soubor
+                Window1 newWindow = new Window1();
+
+                newWindow.Show();
             }
-            textvstup.Text = "";
-            precit(path);
+            
         }
 
       
